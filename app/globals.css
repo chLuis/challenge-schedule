@@ -7,10 +7,10 @@
   border-radius: 10px;
 }
 *::-webkit-scrollbar-track {
-  background: rgb(245, 245, 245);        /* Tracking area */
+  background: rgb(245, 245, 245);    /* Tracking area */
 }
 
 *::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: #cccccc;    /* Scroll thumb */
+  background-color: #aeb6eb;    /* Scroll thumb */
 }

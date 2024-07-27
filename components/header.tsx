@@ -12,17 +12,17 @@ export const Header = () => {
   }, [day])
 
   return (
-    <header className="col-span-12 grid grid-cols-12 content-center border-b border-b-black p-3">
-    <div className="col-span-3 flex flex-nowrap gap-2 ">
-      <div className="rounded-full border-2 border-blue-700 w-10 h-10 content-center text-center">26</div>
-      <div className="content-center">Hoy</div>
+    <header className="col-span-12 flex justify-between items-center content-center border-b border-b-black/20 p-3 font-medium text-xl select-none text-black/70">
+    <div className="col-span-1 flex flex-nowrap gap-2 ">
+      <div className="rounded-full border-4 border-blue-500 w-10 h-10 content-center text-center text-lg">26</div>
+      {/* <div className="content-center">Hoy</div> */}
+      <div className="col-span-1 content-center">My Calendar</div>
     </div>
-    <div className="col-span-3 content-center">My Calendar</div>
     {/* <div className="col-span-1 content-center">{"<"}</div>
     <div className="col-span-1 content-center">{">"}</div> */}
-    <div className="col-span-4 content-center text-center">{dayComplete.toLocaleDateString()}</div>
+    <div className="col-span-8 content-center">{dayComplete.toLocaleDateString()}</div>
     <div className="col-span-2 flex justify-end">
-      <div className="rounded-full bg-blue-400 text-white w-10 h-10 content-center text-center">L</div>
+      <div className="rounded-full bg-blue-500 text-white w-10 h-10 content-center text-center">L</div>
     </div>
   </header>
   )
