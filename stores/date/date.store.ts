@@ -9,6 +9,7 @@ import { Cita } from "@/types/cita";
 interface StoreState {
   dates: Cita[];
   addDate: (date: Cita) => void;
+  changeDate: (date: Cita, newDate: Cita) => void;
   removeDate: (date: Cita) => void;
   removeAllDate: () => void;
 }
@@ -24,9 +25,20 @@ const storeApi: StateCreator<StoreState> = (set) => ({
     if (existingDate) {
       return state;
     } else {
+      const dateToUpdate = state.dates.find(item => 
+        item.fecha === date.fecha &&
+        item.hora === date.hora)
+        //console.log("To update ->",dateToUpdate);
+      if (dateToUpdate) {
+        dateToUpdate.ape_nom = date.ape_nom;
+        dateToUpdate.id_paciente = date.id_paciente;
+        dateToUpdate.id_agenda = date.id_agenda;
+        return { dates: [...state.dates] };
+      }
       return { dates: [...state.dates, date] };
     }
   }),
+  changeDate: (date: Cita, newDate: Cita) => set((state) => ({ dates: state.dates.map((i) => i.fecha === date.fecha && i.hora === date.hora ? newDate : i) })),
   removeDate: (date: Cita) => set((state) => ({ dates: state.dates.filter((i) => i.id_agenda !== date.id_agenda) })),
   removeAllDate: () => set((state) => ({dates: [] })),
 });

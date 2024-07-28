@@ -10,15 +10,15 @@ export const CalendarComponent = ({citas} : {citas: any}) => {
   const agenda = useDatesStore((state) => state.dates);
   const addAgenda = useDatesStore((state) => state.addDate);
 
-
   React.useMemo(() => {
-    if(agenda.length === 0) {
+    if(agenda) {
       for (let i = 0; i < citas.length; i++) {
         addAgenda(citas[i])
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [citas]);
+  //console.log(agenda);
 
   const [date, setDate] = React.useState<Date | undefined>(new Date("2021-09-16T00:00:00"));
   //console.log(new Date("2024-07-10T00:00:00"));

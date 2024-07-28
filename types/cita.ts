@@ -1,7 +1,7 @@
 export type Cita = {
-  id_agenda: number;
-  id_paciente: number;
+  id_agenda: number | null;
+  id_paciente: number | null;
   fecha: string;
   hora: string;
-  ape_nom: string;
+  ape_nom: string | null;
 };

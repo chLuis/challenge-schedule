@@ -4,7 +4,7 @@ const URL = "https://my-json-server.typicode.com/juanpernu/bilog-fe-challenge/sc
 
 export const GET = async () => {
   try {
-    const {data} = await axios.get(URL);
+    const { data } = await axios.get(URL);
     return data
     
   } catch (err) {
