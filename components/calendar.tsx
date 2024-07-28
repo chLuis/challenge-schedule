@@ -27,6 +27,10 @@ export const CalendarComponent = ({citas} : {citas: any}) => {
     newDay(date || new Date())
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date])
+
+  React.useEffect(() => {
+    setDate(new Date("2021-09-16T00:00:00"))
+  },[])
 //console.log(date);
   //console.log(agenda);
   return (
@@ -36,6 +40,7 @@ export const CalendarComponent = ({citas} : {citas: any}) => {
         selected={date}
         onSelect={setDate}
         className="rounded-md border select-none"
+        defaultMonth={date}
       />
     </div>
   );
