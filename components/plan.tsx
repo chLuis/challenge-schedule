@@ -193,7 +193,7 @@ export const Plan = () => {
                   )
                 }}>
                 </FormField>
-                {editDate?.id_agenda !== -1
+                {editDate?.id_agenda !== -1 && editDate?.id_agenda !== null
                   ? <div className="flex flex-col my-2 gap-2">
                     <SheetClose asChild>
                       <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white">Edit</Button>
