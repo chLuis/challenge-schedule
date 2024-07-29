@@ -47,7 +47,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
     },
   });
 
-  React.useEffect(() => {
+  React.useMemo(() => {
     if (editDate) {
       form.reset({
         ape_nom: editDate.ape_nom || "",
@@ -74,11 +74,6 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
     setEditDate(newItem)
   }
 
-  
-  
-
-
-
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     changeDate(editDate!, values)
     setIsOpen(false)
@@ -99,7 +94,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
   return (
     <main className="col-span-12 grid grid-cols-12 mt-2 mx-3 overflow-auto animate-fade-in">
     {hours.map((hour, index) => (
-      <Sheet key={index} open={isOpen} >
+      <Sheet key={index} >
         <SheetTrigger className="col-span-12" onClick={() => setIsOpen(!isOpen)}>
           <div className="col-span-12 flex flex-nowrap h-12 gap-0 hover:bg-blue-100 mx-1 duration-150">
             <div className="w-14 h-12 flex justify-center items-center text-sm border-b border-r border-gray-300">
@@ -119,15 +114,15 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
             </div>
           </div>
         </SheetTrigger>
-          <SheetOverlay className=" opacity-5 animate-in" onClick={() => setIsOpen(false)}/>
+          {/* <SheetOverlay className="" onClick={() => setIsOpen(false)}/> */}
         <SheetContent side={"left"} className="shadow-none">
-          <div className="select-none flex justify-end items-center w-full ">
+          {/* <div className="select-none flex justify-end items-center w-full ">
             <X onClick={() => setIsOpen(false)}  className="cursor-pointer p-1"/>
-          </div>
+          </div> */}
           <SheetHeader>
             <SheetTitle className="text-center text-2xl pb-2">{editDate?.id_agenda === -1 || editDate?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
             <SheetDescription className="text-start px-4">
-              Fill the fields to complete the appointment
+              Fill the fields to complete the Appointment
             </SheetDescription>
             
             <Form {...form}>
@@ -202,7 +197,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                           <DialogHeader className="gap-4">
                             <DialogTitle className="uppercase">Updating Appointment</DialogTitle>
                             <DialogDescription>
-                              This action cannot be undone. This will updating your Appointment, confirm?
+                              This action cannot be undone. This will updating your appointment, confirm?
                             </DialogDescription>
                             <Button type="button" onClick={form.handleSubmit(handleSubmit)} className="bg-blue-500 hover:bg-blue-700 text-white p-0">
                               <DialogClose className="w-full h-full">Confirm</DialogClose>
@@ -218,7 +213,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                           <DialogHeader className="gap-4">
                             <DialogTitle className="uppercase">Deleting Appointment</DialogTitle>
                             <DialogDescription>
-                              This action cannot be undone. This will permanently delete your Appointment
+                              This action cannot be undone. This will permanently delete your appointment
                             </DialogDescription>
                         <Button onClick={() => handleDelete()} className="bg-red-500 hover:bg-red-700 text-white">Confirm</Button>
                         </DialogHeader>

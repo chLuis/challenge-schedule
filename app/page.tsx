@@ -7,7 +7,7 @@ export default async function Home() {
   const data = await GET();
 
   return (
-    <main className="grid grid-cols-12 pb-4 h-screen max-h-screen content-start overflow-clip">
+    <main className="grid grid-cols-12 pb-4 h-screen content-start overflow-clip">
       <Header />
       <CalendarComponent />
       <Schedule dataMeet={data}/>
