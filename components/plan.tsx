@@ -28,14 +28,13 @@ export const Plan = () => {
   const changeDate = useDatesStore((state) => state.changeDate)
   //const addDate = useDatesStore((state) => state.addDate)
   //const borrarCita = useDatesStore((state) => state.removeDate)
-  const [ agendaToday, setAgendaToday ] = React.useState<Cita[]>([])
+  //const [ agendaToday, setAgendaToday ] = React.useState<Cita[]>([])
   const [ editDate, setEditDate ] = React.useState<Cita | undefined>(undefined)
-  
 
-  React.useMemo(() => {
-    setAgendaToday(agenda.filter((item) => item.fecha === day))
-    //setDayNoFormat(new Date(day))
-  }, [agenda, day])
+  // React.useMemo(() => {
+  //   setAgendaToday(agenda.filter((item) => item.fecha === day))
+
+  // }, [agenda, day])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -115,16 +114,16 @@ export const Plan = () => {
               {hour}
             </div>
             <div className="w-full border-b h-12 py-0 border-gray-300">
-              {agendaToday.length === 0
-                ? <div onClick={() => handleNewDate(hour)} className="w-full h-12 py-0"></div>
-                : null
-              }
-              {agendaToday.map((item: Cita, index) => item.hora === hour
-                ? item.id_agenda === -1
-                  ? <div key={index} onClick={() => handleDate(item)} className="w-full h-12 py-0 "></div>
-                  : <div key={index} onClick={() => handleDate(item)} className="h-12 bg-blue-300 w-full z-10 flex items-center px-2 hover:bg-blue-600 text-black/70 hover:text-white duration-150">Patient: {item.ape_nom}</div>
-                : null)
-              }
+            { agenda.some((item) => item.hora === hour && item.fecha === day)
+              ? agenda.map((item, index) =>
+                item.hora === hour && item.fecha === day
+                  ? item.id_agenda !== -1
+                      ? <div key={index} onClick={() => handleDate(item)} className="h-12 bg-blue-300 w-full z-10 flex items-center px-2 hover:bg-blue-600 text-black/70 hover:text-white duration-150">Patient: {item.ape_nom}</div>
+                      : <div key={index} onClick={() => handleNewDate(hour)} className="h-12 py-0"></div>
+                  : null
+                )
+              : <div key={hour} onClick={() => handleNewDate(hour)} className="w-full h-12 py-0"></div>
+            }
             </div>
           </div>
         </SheetTrigger>
@@ -199,23 +198,16 @@ export const Plan = () => {
                 </FormField>
                 {editDate?.id_agenda !== -1 && editDate?.id_agenda !== null
                   ? <div className="flex flex-col my-2 gap-2">
-                    <SheetClose asChild>
-                      <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white">Edit</Button>
+                      <SheetClose asChild>
+                        <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white">Edit</Button>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Button onClick={(e) => handleDelete(e)} variant="ghost">Delete</Button>
+                      </SheetClose>
+                    </div>
+                  : <SheetClose asChild>
+                      <Button type="submit" className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
                     </SheetClose>
-                    <SheetClose asChild>
-                      <Button onClick={(e) => handleDelete(e)} variant="ghost">Delete</Button>
-                    </SheetClose>
-                    {/* <SheetClose asChild>
-                      <Button type="submit" variant="ghost">Delete</Button>
-                    </SheetClose> */}
-                  </div>
-                  : 
-                  <SheetClose asChild>
-                    <Button type="submit" className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
-                  </SheetClose>
-                  // <SheetClose asChild>
-                  //   <Button type="submit" className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
-                  // </SheetClose>
                 }
               </form>
             </Form>

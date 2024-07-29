@@ -18,7 +18,7 @@ export const CalendarComponent = ({citas} : {citas: any}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [citas]);
-  //console.log(agenda);
+
 
   const [date, setDate] = React.useState<Date | undefined>(new Date("2021-09-16T00:00:00"));
   //console.log(new Date("2024-07-10T00:00:00"));
@@ -31,8 +31,7 @@ export const CalendarComponent = ({citas} : {citas: any}) => {
   React.useEffect(() => {
     setDate(new Date("2021-09-16T00:00:00"))
   },[])
-//console.log(date);
-  //console.log(agenda);
+
   return (
     <div className="col-span-12 lg:col-span-4 xl:col-span-3 flex justify-center items-start overflow-auto h-fit min-h-fit p-3">
       <Calendar
