@@ -28,7 +28,7 @@ const storeApi: StateCreator<StoreState> = (set) => ({
       const dateToUpdate = state.dates.find(item => 
         item.fecha === date.fecha &&
         item.hora === date.hora)
-        //console.log("To update ->",dateToUpdate);
+        console.log("To update ->",dateToUpdate);
       if (dateToUpdate) {
         dateToUpdate.ape_nom = date.ape_nom;
         dateToUpdate.id_paciente = date.id_paciente;
@@ -38,7 +38,22 @@ const storeApi: StateCreator<StoreState> = (set) => ({
       return { dates: [...state.dates, date] };
     }
   }),
-  changeDate: (date: Cita, newDate: Cita) => set((state) => ({ dates: state.dates.map((i) => i.fecha === date.fecha && i.hora === date.hora ? newDate : i) })),
+  changeDate: (date, newDate) => set((state) => {
+    // Verifica si ya existe un elemento con la misma fecha y hora
+    const exists = state.dates.some(i => i.fecha === date.fecha && i.hora === date.hora);
+
+    // Si existe, modifica el elemento
+    if (exists) {
+        return {
+            dates: state.dates.map(i => (i.fecha === date.fecha && i.hora === date.hora ? newDate : i))
+        };
+    }
+
+    // Si no existe, agrega el nuevo elemento
+    return {
+        dates: [...state.dates, newDate]
+    };
+}),
   removeDate: (date: Cita) => set((state) => ({ dates: state.dates.filter((i) => i.id_agenda !== date.id_agenda) })),
   removeAllDate: () => set((state) => ({dates: [] })),
 });
@@ -52,3 +67,5 @@ export const useDatesStore = create<StoreState>()(
     })
 
 );
+
+//TODO -> fix cuando no hay item, en changeDate

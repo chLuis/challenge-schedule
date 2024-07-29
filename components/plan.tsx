@@ -37,6 +37,29 @@ export const Plan = () => {
     //setDayNoFormat(new Date(day))
   }, [agenda, day])
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      ape_nom: editDate?.ape_nom ?? "",
+      hora: editDate?.hora ?? "",
+      fecha: editDate?.fecha ?? "",
+      id_agenda: editDate?.id_agenda ?? undefined,
+      id_paciente: editDate?.id_paciente ?? 0,
+    },
+  });
+
+  React.useEffect(() => {
+    if (editDate) {
+      form.reset({
+        ape_nom: editDate.ape_nom || "",
+        hora: editDate.hora || "",
+        fecha: editDate.fecha || "",
+        id_agenda: editDate.id_agenda || undefined,
+        id_paciente: editDate.id_paciente || 0,
+      });
+    }
+  }, [editDate, form]);
+
   function handleDate(item: Cita) {
     setEditDate(item)
   }
@@ -52,28 +75,9 @@ export const Plan = () => {
     setEditDate(newItem)
   }
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      ape_nom: editDate?.ape_nom ?? "",
-      hora: editDate?.hora ?? "",
-      fecha: editDate?.fecha ?? "",
-      id_agenda: editDate?.id_agenda ?? undefined,
-      id_paciente: editDate?.id_paciente ?? 0,
-    },
-  });
   
-  React.useEffect(() => {
-    if (editDate) {
-      form.reset({
-        ape_nom: editDate.ape_nom || "",
-        hora: editDate.hora || "",
-        fecha: editDate.fecha || "",
-        id_agenda: editDate.id_agenda || undefined,
-        id_paciente: editDate.id_paciente || 0,
-      });
-    }
-  }, [editDate, form]);
+  
+
 
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
@@ -86,7 +90,7 @@ export const Plan = () => {
   };
 
   const handleDelete = (e : any) => {
-    e.preventDefault();
+    //e.preventDefault();
     //console.log("DELETE");
     //console.log(editDate);
     //borrarCita(editDate!)
@@ -198,15 +202,17 @@ export const Plan = () => {
                     <SheetClose asChild>
                       <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white">Edit</Button>
                     </SheetClose>
-                    
+                    <SheetClose asChild>
                       <Button onClick={(e) => handleDelete(e)} variant="ghost">Delete</Button>
-                    
+                    </SheetClose>
                     {/* <SheetClose asChild>
                       <Button type="submit" variant="ghost">Delete</Button>
                     </SheetClose> */}
                   </div>
                   : 
-                  <Button type="submit" className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
+                  <SheetClose asChild>
+                    <Button type="submit" className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
+                  </SheetClose>
                   // <SheetClose asChild>
                   //   <Button type="submit" className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
                   // </SheetClose>

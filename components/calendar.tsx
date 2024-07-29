@@ -11,7 +11,7 @@ export const CalendarComponent = ({citas} : {citas: any}) => {
   const addAgenda = useDatesStore((state) => state.addDate);
 
   React.useMemo(() => {
-    if(agenda) {
+    if(!agenda) {
       for (let i = 0; i < citas.length; i++) {
         addAgenda(citas[i])
       }
