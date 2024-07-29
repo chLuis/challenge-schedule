@@ -13,7 +13,7 @@ export const PlanHeader = () => {
   }, [day]);
 
   return (
-    <header className="fixed flex gap-4 font-semibold items-center bg-white z-40 col-span-12 mx-6 pb-2 text-center">
+    <header className="sticky flex gap-4 font-semibold items-center bg-white z-40 col-span-12 mx-6 pb-2 text-center">
       <div>
         <div className="uppercase text-xs w-10 text-blue-500">
           {nombreDias[dayNoFormat.getDay()].substring(0, 3)}

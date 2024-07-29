@@ -6,7 +6,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { X } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetOverlay, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
@@ -97,7 +97,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
 
     }
   return (
-    <main className="col-span-12 grid grid-cols-12 mt-20 mx-3 overflow-auto animate-fade-in">
+    <main className="col-span-12 grid grid-cols-12 mt-2 mx-3 overflow-auto animate-fade-in">
     {hours.map((hour, index) => (
       <Sheet key={index} open={isOpen} >
         <SheetTrigger className="col-span-12" onClick={() => setIsOpen(!isOpen)}>
@@ -125,9 +125,9 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
             <X onClick={() => setIsOpen(false)}  className="cursor-pointer p-1"/>
           </div>
           <SheetHeader>
-            <SheetTitle className="text-center text-2xl pb-2">{editDate?.id_agenda === -1 || editDate?.id_agenda === null ? "Create meet" : "Edit meet"}</SheetTitle>
+            <SheetTitle className="text-center text-2xl pb-2">{editDate?.id_agenda === -1 || editDate?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
             <SheetDescription className="text-start px-4">
-              Fill the fields to complete the meet
+              Fill the fields to complete the appointment
             </SheetDescription>
             
             <Form {...form}>
@@ -171,7 +171,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                 <FormField control={form.control} name="id_agenda" render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>ID Meet</FormLabel>
+                      <FormLabel>ID Appointment</FormLabel>
                       <FormControl>
                         <Input {...field} type="number"/>
                       </FormControl>
@@ -200,11 +200,13 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px] w-5/6">
                           <DialogHeader className="gap-4">
-                            <DialogTitle className="uppercase">Updating meet</DialogTitle>
+                            <DialogTitle className="uppercase">Updating Appointment</DialogTitle>
                             <DialogDescription>
-                              This action cannot be undone. This will updating your meet, confirm?
+                              This action cannot be undone. This will updating your Appointment, confirm?
                             </DialogDescription>
-                        <Button type="button" onClick={form.handleSubmit(handleSubmit)} className="bg-blue-500 hover:bg-blue-700 text-white">Confirm</Button>
+                            <Button type="button" onClick={form.handleSubmit(handleSubmit)} className="bg-blue-500 hover:bg-blue-700 text-white p-0">
+                              <DialogClose className="w-full h-full">Confirm</DialogClose>
+                            </Button>
                         </DialogHeader>
                         </DialogContent>
                       </Dialog>
@@ -214,9 +216,9 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px] w-5/6">
                           <DialogHeader className="gap-4">
-                            <DialogTitle className="uppercase">Deleting meet</DialogTitle>
+                            <DialogTitle className="uppercase">Deleting Appointment</DialogTitle>
                             <DialogDescription>
-                              This action cannot be undone. This will permanently delete your meet
+                              This action cannot be undone. This will permanently delete your Appointment
                             </DialogDescription>
                         <Button onClick={() => handleDelete()} className="bg-red-500 hover:bg-red-700 text-white">Confirm</Button>
                         </DialogHeader>
