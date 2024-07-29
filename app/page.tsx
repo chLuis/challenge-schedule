@@ -9,8 +9,8 @@ export default async function Home() {
   return (
     <main className="grid grid-cols-12 pb-4 h-screen max-h-screen content-start overflow-clip">
       <Header />
-      <CalendarComponent citas={data}/>
-      <Schedule />
+      <CalendarComponent />
+      <Schedule dataMeet={data}/>
     </main>
   );
 }

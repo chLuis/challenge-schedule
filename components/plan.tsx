@@ -4,50 +4,37 @@ import React from "react";
 import { useForm } from "react-hook-form"
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetOverlay,
-  SheetPortal,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { X } from "lucide-react";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetOverlay, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { useDatesStore } from "@/stores/date/date.store";
 import { useDayStore } from "@/stores/day/day.store"
 import { hours } from "@/constants";
 import { Cita } from "@/types/cita";
-import { X } from "lucide-react";
 
-
-export const Plan = () => {
+export const Plan = ({meets} : {meets: Cita[]}) => {
   const day = useDayStore((state) => state.day)
   const agenda = useDatesStore((state) => state.dates)
   const changeDate = useDatesStore((state) => state.changeDate)
   //const addDate = useDatesStore((state) => state.addDate)
-  //const borrarCita = useDatesStore((state) => state.removeDate)
-  //const [ agendaToday, setAgendaToday ] = React.useState<Cita[]>([])
   const [ editDate, setEditDate ] = React.useState<Cita | undefined>(undefined)
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [ isOpen, setIsOpen ] = React.useState(false);
 
-  // React.useMemo(() => {
-  //   setAgendaToday(agenda.filter((item) => item.fecha === day))
+  React.useMemo(() => {
+    if (typeof window !== 'undefined') {
+    const checkDates = JSON.parse(localStorage.getItem("dates") || "");
+    if(checkDates.state.dates.length === 0) {
+      for (let i = 0; i < meets.length; i++) {
+        changeDate(meets[i], meets[i])
+      }
+    }
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meets])
 
-  // }, [agenda, day])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -93,12 +80,7 @@ export const Plan = () => {
 
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    //console.log("BOTON");
-    //console.log({ values });
-    //console.log(editDate);
-    //borrarCita(values)
     changeDate(editDate!, values)
-    //addDate(values)
     setIsOpen(false)
   };
 
@@ -110,16 +92,15 @@ export const Plan = () => {
       hora: editDate!.hora,
       ape_nom: null,
     }
-    //console.log(newDate);
     changeDate(editDate!, newDate)
     setIsOpen(false)
 
     }
   return (
-    <main className="col-span-12 grid grid-cols-12 mt-20 mx-3 overflow-auto">
+    <main className="col-span-12 grid grid-cols-12 mt-20 mx-3 overflow-auto animate-fade-in">
     {hours.map((hour, index) => (
       <Sheet key={index} open={isOpen} >
-        <SheetTrigger className="col-span-12 " onClick={() => setIsOpen(!isOpen)}>
+        <SheetTrigger className="col-span-12" onClick={() => setIsOpen(!isOpen)}>
           <div className="col-span-12 flex flex-nowrap h-12 gap-0 hover:bg-blue-100 mx-1 duration-150">
             <div className="w-14 h-12 flex justify-center items-center text-sm border-b border-r border-gray-300">
               {hour}
@@ -129,7 +110,7 @@ export const Plan = () => {
               ? agenda.map((item, index) =>
                 item.hora === hour && item.fecha === day
                   ? item.id_agenda !== -1
-                      ? <div key={index} onClick={() => handleDate(item)} className="h-12 bg-blue-300 w-full z-10 flex items-center px-2 hover:bg-blue-600 text-black/70 hover:text-white duration-150">Patient: {item.ape_nom}</div>
+                      ? <div key={index} onClick={() => handleDate(item)} className="h-12 bg-blue-300 w-full z-10 flex items-center px-2 hover:bg-blue-600 text-black/70 hover:text-white duration-150 animate-fade-in">Patient: {item.ape_nom}</div>
                       : <div key={index} onClick={() => handleNewDate(hour)} className="h-12 py-0"></div>
                   : null
                 )
@@ -224,7 +205,6 @@ export const Plan = () => {
                               This action cannot be undone. This will updating your meet, confirm?
                             </DialogDescription>
                         <Button type="button" onClick={form.handleSubmit(handleSubmit)} className="bg-blue-500 hover:bg-blue-700 text-white">Confirm</Button>
-                        {/* <Button onClick={(e) => handleDelete(e)} className="bg-red-500 hover:bg-red-700 text-white">Confirm</Button> */}
                         </DialogHeader>
                         </DialogContent>
                       </Dialog>
@@ -264,11 +244,12 @@ const formSchema = z.object({
     .max(999999, {message: "ID patiente must be in the range 1 to 999999." })
     .positive({message:"ID patient must be positive"}),
   fecha: z.string()
-    .min(10, {message: "Date must be at least 10 characters.",  }),
+    .min(10, {message: "Date must be at least 10 characters."})
+    .max(30, {message: "Date must be in the range 30 characters."}),
   hora: z.string()
-    .min(4, { message: "Timme must be at least 4 characters."}),
+    .min(4, { message: "Timme must be at least 4 characters."})
+    .max(8 , { message: "Time must be in the range 4 to 8 characters." }),
   id_agenda: z.coerce.number()
     .min(1, { message: "ID Agenda must be at least 1 numbers." })
     .max(999999, { message: "ID Agenda must be in the range 1 to 999999." })
-
 })

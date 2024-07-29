@@ -3,21 +3,21 @@
 import React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { useDayStore } from "@/stores/day/day.store";
-import { useDatesStore } from "@/stores/date/date.store";
+// import { useDatesStore } from "@/stores/date/date.store";
 
-export const CalendarComponent = ({citas} : {citas: any}) => {
+export const CalendarComponent = () => {
   const newDay = useDayStore((state) => state.newDay)
-  const agenda = useDatesStore((state) => state.dates);
-  const addAgenda = useDatesStore((state) => state.addDate);
+  // const agenda = useDatesStore((state) => state.dates);
+  // const addAgenda = useDatesStore((state) => state.addDate);
 
-  React.useMemo(() => {
-    if(!agenda) {
-      for (let i = 0; i < citas.length; i++) {
-        addAgenda(citas[i])
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [citas]);
+  // React.useMemo(() => {
+  //   if(!agenda) {
+  //     for (let i = 0; i < citas.length; i++) {
+  //       addAgenda(citas[i])
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [citas]);
 
 
   const [date, setDate] = React.useState<Date | undefined>(new Date("2021-09-16T00:00:00"));
