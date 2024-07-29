@@ -55,7 +55,7 @@ export const Plan = () => {
       ape_nom: editDate?.ape_nom ?? "",
       hora: editDate?.hora ?? "",
       fecha: editDate?.fecha ?? "",
-      id_agenda: editDate?.id_agenda ?? undefined,
+      id_agenda: editDate?.id_agenda ?? 0,
       id_paciente: editDate?.id_paciente ?? 0,
     },
   });
@@ -66,7 +66,7 @@ export const Plan = () => {
         ape_nom: editDate.ape_nom || "",
         hora: editDate.hora || "",
         fecha: editDate.fecha || "",
-        id_agenda: editDate.id_agenda || undefined,
+        id_agenda: editDate.id_agenda || 0,
         id_paciente: editDate.id_paciente || 0,
       });
     }
@@ -192,7 +192,7 @@ export const Plan = () => {
                     <FormItem>
                       <FormLabel>ID Meet</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} type="number"/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -204,7 +204,7 @@ export const Plan = () => {
                     <FormItem>
                       <FormLabel>ID Patient</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} type="number"/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -261,11 +261,14 @@ const formSchema = z.object({
     .max(36,  {message: "Fullname must be at most 36 characters",}),
   id_paciente: z.coerce.number()
     .min(1, {message: "ID patient must be at least 1 digit." })
+    .max(999999, {message: "ID patiente must be in the range 1 to 999999." })
     .positive({message:"ID patient must be positive"}),
   fecha: z.string()
     .min(10, {message: "Date must be at least 10 characters.",  }),
   hora: z.string()
     .min(4, { message: "Timme must be at least 4 characters."}),
   id_agenda: z.coerce.number()
-    .min(1, { message: "ID Agenda must be at least 1 numbers." }),
+    .min(1, { message: "ID Agenda must be at least 1 numbers." })
+    .max(999999, { message: "ID Agenda must be in the range 1 to 999999." })
+
 })
