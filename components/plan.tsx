@@ -10,9 +10,20 @@ import {
   SheetContent,
   SheetDescription,
   SheetHeader,
+  SheetOverlay,
+  SheetPortal,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
@@ -20,6 +31,7 @@ import { useDatesStore } from "@/stores/date/date.store";
 import { useDayStore } from "@/stores/day/day.store"
 import { hours } from "@/constants";
 import { Cita } from "@/types/cita";
+import { X } from "lucide-react";
 
 
 export const Plan = () => {
@@ -30,6 +42,7 @@ export const Plan = () => {
   //const borrarCita = useDatesStore((state) => state.removeDate)
   //const [ agendaToday, setAgendaToday ] = React.useState<Cita[]>([])
   const [ editDate, setEditDate ] = React.useState<Cita | undefined>(undefined)
+  const [isOpen, setIsOpen] = React.useState(false);
 
   // React.useMemo(() => {
   //   setAgendaToday(agenda.filter((item) => item.fecha === day))
@@ -86,14 +99,10 @@ export const Plan = () => {
     //borrarCita(values)
     changeDate(editDate!, values)
     //addDate(values)
+    setIsOpen(false)
   };
 
-  const handleDelete = (e : any) => {
-    //e.preventDefault();
-    //console.log("DELETE");
-    //console.log(editDate);
-    //borrarCita(editDate!)
-    //setEditDate(undefined)
+  const handleDelete = () => {
     const newDate = {
       id_agenda: -1,
       id_paciente: null,
@@ -103,12 +112,14 @@ export const Plan = () => {
     }
     //console.log(newDate);
     changeDate(editDate!, newDate)
+    setIsOpen(false)
+
     }
   return (
     <main className="col-span-12 grid grid-cols-12 mt-20 mx-3 overflow-auto">
     {hours.map((hour, index) => (
-      <Sheet key={index}>
-        <SheetTrigger className="col-span-12 ">
+      <Sheet key={index} open={isOpen} >
+        <SheetTrigger className="col-span-12 " onClick={() => setIsOpen(!isOpen)}>
           <div className="col-span-12 flex flex-nowrap h-12 gap-0 hover:bg-blue-100 mx-1 duration-150">
             <div className="w-14 h-12 flex justify-center items-center text-sm border-b border-r border-gray-300">
               {hour}
@@ -127,7 +138,11 @@ export const Plan = () => {
             </div>
           </div>
         </SheetTrigger>
-        <SheetContent side={"left"}>
+          <SheetOverlay className=" opacity-5 animate-in" onClick={() => setIsOpen(false)}/>
+        <SheetContent side={"left"} className="shadow-none">
+          <div className="select-none flex justify-end items-center w-full ">
+            <X onClick={() => setIsOpen(false)}  className="cursor-pointer p-1"/>
+          </div>
           <SheetHeader>
             <SheetTitle className="text-center text-2xl pb-2">{editDate?.id_agenda === -1 || editDate?.id_agenda === null ? "Create meet" : "Edit meet"}</SheetTitle>
             <SheetDescription className="text-start px-4">
@@ -198,16 +213,37 @@ export const Plan = () => {
                 </FormField>
                 {editDate?.id_agenda !== -1 && editDate?.id_agenda !== null
                   ? <div className="flex flex-col my-2 gap-2">
-                      <SheetClose asChild>
-                        <Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white">Edit</Button>
-                      </SheetClose>
-                      <SheetClose asChild>
-                        <Button onClick={(e) => handleDelete(e)} variant="ghost">Delete</Button>
-                      </SheetClose>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button type="button" className="bg-blue-500 hover:bg-blue-700 text-white">Update</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px] w-5/6">
+                          <DialogHeader className="gap-4">
+                            <DialogTitle className="uppercase">Updating meet</DialogTitle>
+                            <DialogDescription>
+                              This action cannot be undone. This will updating your meet, confirm?
+                            </DialogDescription>
+                        <Button type="button" onClick={form.handleSubmit(handleSubmit)} className="bg-blue-500 hover:bg-blue-700 text-white">Confirm</Button>
+                        {/* <Button onClick={(e) => handleDelete(e)} className="bg-red-500 hover:bg-red-700 text-white">Confirm</Button> */}
+                        </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button type="button" variant="ghost">Delete</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px] w-5/6">
+                          <DialogHeader className="gap-4">
+                            <DialogTitle className="uppercase">Deleting meet</DialogTitle>
+                            <DialogDescription>
+                              This action cannot be undone. This will permanently delete your meet
+                            </DialogDescription>
+                        <Button onClick={() => handleDelete()} className="bg-red-500 hover:bg-red-700 text-white">Confirm</Button>
+                        </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
                     </div>
-                  : <SheetClose asChild>
-                      <Button type="submit" className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
-                    </SheetClose>
+                  : <Button type="button" onClick={form.handleSubmit(handleSubmit)} className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
                 }
               </form>
             </Form>
@@ -220,19 +256,16 @@ export const Plan = () => {
 }
 
 const formSchema = z.object({
-  ape_nom: z.string().min(4, {
-    message: "Fullname must be at least 4 characters.",
-  }),
-  id_paciente: z.coerce.number().min(1, {
-    message: "ID patient must be at least 1 digit.",
-  }).positive({message:"ID number must be positive"}),
-  fecha: z.string().min(10, {
-    message: "Date must be at least 10 characters.",
-  }),
-  hora: z.string().min(4, {
-    message: "Timme must be at least 4 characters.",
-  }),
-  id_agenda: z.coerce.number().min(1, {
-    message: "ID Agenda must be at least 1 numbers.",
-  }),
+  ape_nom: z.string()
+    .min(4, {message: "Fullname must be at least 4 characters." })
+    .max(36,  {message: "Fullname must be at most 36 characters",}),
+  id_paciente: z.coerce.number()
+    .min(1, {message: "ID patient must be at least 1 digit." })
+    .positive({message:"ID patient must be positive"}),
+  fecha: z.string()
+    .min(10, {message: "Date must be at least 10 characters.",  }),
+  hora: z.string()
+    .min(4, { message: "Timme must be at least 4 characters."}),
+  id_agenda: z.coerce.number()
+    .min(1, { message: "ID Agenda must be at least 1 numbers." }),
 })
