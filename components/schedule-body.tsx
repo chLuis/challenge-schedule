@@ -98,7 +98,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
   }
 
   return (
-    <main className="col-span-12 grid grid-cols-12 mt-2 mx-3 overflow-auto animate-fade-in">
+    <main className="col-span-12 grid grid-cols-12 mt-2 mx-1 overflow-auto animate-fade-in">
     {hours.map((hour, index) => (
       <Sheet key={index} >
         <SheetTrigger className="col-span-12">

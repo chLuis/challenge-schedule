@@ -4,30 +4,61 @@ import React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { useDayStore } from "@/stores/day/day.store";
 import Image from "next/image";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "./ui/button";
 
 export const CalendarComponent = () => {
-  const newDay = useDayStore((state) => state.newDay)
-  const [date, setDate] = React.useState<Date | undefined>(new Date("2021-09-16T00:00:00"));
+  const newDay = useDayStore((state) => state.newDay);
+  const [date, setDate] = React.useState<Date | undefined>(
+    new Date("2021-09-16T00:00:00")
+  );
 
   React.useMemo(() => {
-    newDay(date || new Date())
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date])
+    newDay(date || new Date());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
 
   React.useEffect(() => {
-    setDate(new Date("2021-09-16T00:00:00"))
-  },[])
+    setDate(new Date("2021-09-16T00:00:00"));
+  }, []);
 
   return (
-    <div className="col-span-12 dark:bg-neutral-800 lg:col-span-4 xl:col-span-3 flex flex-col gap-4 justify-center items-center overflow-auto h-fit min-h-fit p-3 lg:mb-0 duration-200">
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        className="rounded-md border select-none h-[350px] lg:mb-12 dark:bg-neutral-600"
-        defaultMonth={date}
+    <div className="col-span-12 w-full dark:bg-neutral-800 lg:col-span-4 xl:col-span-3 flex flex-col gap-4 justify-center items-center md:items-start overflow-auto h-fit min-h-fit py-3 lg:mb-0 duration-200">
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-full lg:w-72 justify-start text-left font-normal dark:bg-neutral-600",
+              !date && "text-muted-foreground"
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date ? format(date, "PPP") : <span>Pick a date</span>}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          <Calendar
+            mode="single"
+            className="rounded-md border select-none h-[350px] dark:bg-neutral-600"
+            selected={date}
+            onSelect={setDate}
+            defaultMonth={date}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+
+      <Image
+        src="/calendarLogo.svg"
+        width={400}
+        height={400}
+        alt="calendar"
+        className="object-contain max-w-72 hidden lg:flex opacity-40 dark:opacity-70"
       />
-      <Image src="/calendarLogo.svg" width={400} height={400} alt="calendar" className="object-contain max-w-64 hidden lg:flex opacity-40 dark:opacity-70"/>
     </div>
   );
 };
