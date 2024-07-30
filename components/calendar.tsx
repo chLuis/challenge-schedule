@@ -24,7 +24,7 @@ export const CalendarComponent = () => {
         mode="single"
         selected={date}
         onSelect={setDate}
-        className="rounded-md border select-none h-[350px] lg:mb-12"
+        className="rounded-md border select-none h-[350px] lg:mb-12 dark:bg-neutral-600"
         defaultMonth={date}
       />
       <Image src="/calendarLogo.svg" width={400} height={400} alt="calendar" className="object-contain max-w-64 hidden lg:flex opacity-40 dark:opacity-70"/>
