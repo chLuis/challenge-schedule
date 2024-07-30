@@ -16,9 +16,9 @@ export const metadata = {
       description: "Schedule for appointment",    
       images: [
           {
-              url: 'http://localhost:3000/calendar.svg',
+              url: 'https://challenge-schedule.vercel.app/calendar.svg',
               width: 800,
-              height: 800,
+              height: 200,
               alt: 'calendar'
           }
       ],
