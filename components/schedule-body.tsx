@@ -4,8 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form"
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
-//import { X } from "lucide-react";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetOverlay, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Toaster } from "@/components/ui/sonner"
 import { toast } from "sonner"
@@ -16,53 +15,52 @@ import { useDatesStore } from "@/stores/date/date.store";
 import { useDayStore } from "@/stores/day/day.store"
 import { hours } from "@/constants";
 import { Cita } from "@/types/cita";
+import { formSchema } from "@/schemas/form";
 
-export const Plan = ({meets} : {meets: Cita[]}) => {
-  const day = useDayStore((state) => state.day)
+export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
+  const day = useDayStore((state) => state.getDay())
   const agenda = useDatesStore((state) => state.dates)
-  const changeDate = useDatesStore((state) => state.changeDate)
-  //const addDate = useDatesStore((state) => state.addDate)
-  const [ editDate, setEditDate ] = React.useState<Cita | undefined>(undefined)
+  const getAgenda = useDatesStore((state) => state.getDates)
+  const changeAgenda = useDatesStore((state) => state.changeDate)
+  const [ editAppointment, setEditAppointment ] = React.useState<Cita | undefined>(undefined)
   const [ isOpen, setIsOpen ] = React.useState(false);
 
   React.useMemo(() => {
-    if (typeof window !== 'undefined') {
-    const checkDates = JSON.parse(localStorage.getItem("dates") || "");
-    if(checkDates.state.dates.length === 0) {
+    const datos = getAgenda();
+    if(datos.length === 0) {
       for (let i = 0; i < meets.length; i++) {
-        changeDate(meets[i], meets[i])
+        changeAgenda(meets[i], meets[i])
       }
     }
-  }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [meets])
-
+  }, [])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ape_nom: editDate?.ape_nom ?? "",
-      hora: editDate?.hora ?? "",
-      fecha: editDate?.fecha ?? "",
-      id_agenda: editDate?.id_agenda ?? 0,
-      id_paciente: editDate?.id_paciente ?? 0,
+      ape_nom: editAppointment?.ape_nom ?? "",
+      hora: editAppointment?.hora ?? "",
+      fecha: editAppointment?.fecha ?? "",
+      id_agenda: editAppointment?.id_agenda ?? 0,
+      id_paciente: editAppointment?.id_paciente ?? 0,
     },
   });
 
   React.useMemo(() => {
-    if (editDate) {
+    if (editAppointment) {
       form.reset({
-        ape_nom: editDate.ape_nom || "",
-        hora: editDate.hora || "",
-        fecha: editDate.fecha || "",
-        id_agenda: editDate.id_agenda || 0,
-        id_paciente: editDate.id_paciente || 0,
+        ape_nom: editAppointment.ape_nom || "",
+        hora: editAppointment.hora || "",
+        fecha: editAppointment.fecha || "",
+        id_agenda: editAppointment.id_agenda || 0,
+        id_paciente: editAppointment.id_paciente || 0,
       });
     }
-  }, [editDate, form]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editAppointment]);
 
   function handleDate(item: Cita) {
-    setEditDate(item)
+    setEditAppointment(item)
   }
 
   function handleNewDate(hour: string) {
@@ -73,11 +71,11 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
       hora: hour,
       ape_nom: "",
     }
-    setEditDate(newItem)
+    setEditAppointment(newItem)
   }
 
   const handleSubmit = (values: z.infer<typeof formSchema>, secondParam: string) => {
-    changeDate(editDate!, values)
+    changeAgenda(editAppointment!, values)
     setIsOpen(false)
     toast(`Appointment ${secondParam}`)
   };
@@ -86,20 +84,17 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
     return (values: z.infer<typeof formSchema>) => handleSubmit(values, secondParam);
   }
 
-
   const handleDelete = () => {
     toast("Appointment Deleted")
     const newDate = {
       id_agenda: -1,
       id_paciente: null,
       fecha: day,
-      hora: editDate!.hora,
+      hora: editAppointment!.hora,
       ape_nom: null,
     }
-    changeDate(editDate!, newDate)
-
-    }
-
+    changeAgenda(editAppointment!, newDate)
+  }
 
   return (
     <main className="col-span-12 grid grid-cols-12 mt-2 mx-3 overflow-auto animate-fade-in">
@@ -124,14 +119,10 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
             </div>
           </div>
         </SheetTrigger>
-          {/* <SheetOverlay className="" onClick={() => setIsOpen(false)}/> */}
         <SheetContent side={"left"} className="" >
-          {/* <div className="select-none flex justify-end items-center w-full ">
-            <X onClick={() => setIsOpen(false)}  className="cursor-pointer p-1"/>
-          </div> */}
           <SheetClose className="absolute top-0 right-0 m-2"/>
           <SheetHeader>
-            <SheetTitle className="text-center text-2xl pb-2">{editDate?.id_agenda === -1 || editDate?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
+            <SheetTitle className="text-center text-2xl pb-2">{editAppointment?.id_agenda === -1 || editAppointment?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
             <SheetDescription className="text-start px-4">
               Fill the fields to complete the Appointment
             </SheetDescription>
@@ -143,9 +134,9 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                     <FormItem>
                       <FormLabel>Date</FormLabel>
                       <FormControl>
-                        <Input {...field} value={editDate?.fecha} disabled/>
+                        <Input {...field} value={editAppointment?.fecha} disabled/>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
                   )
                 }}>
@@ -157,7 +148,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                       <FormControl>
                         <Input {...field} disabled />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
                   )
                 }}>
@@ -169,7 +160,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
                   )
                 }}>
@@ -181,7 +172,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                       <FormControl>
                         <Input {...field} type="number"/>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
                   )
                 }}>
@@ -193,12 +184,12 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                       <FormControl>
                         <Input {...field} type="number"/>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
                   )
                 }}>
                 </FormField>
-                {editDate?.id_agenda !== -1 && editDate?.id_agenda !== null
+                {editAppointment?.id_agenda !== -1 && editAppointment?.id_agenda !== null
                   ? <div className="flex flex-col my-2 gap-2">
                       <Dialog>
                         <DialogTrigger asChild>
@@ -226,20 +217,16 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                             <DialogDescription>
                               This action cannot be undone. This will permanently delete your appointment
                             </DialogDescription>
-                        <Button onClick={() => {handleDelete(), setIsOpen(false)}} className="bg-red-500 hover:bg-red-700 text-white p-0">
-                            <DialogClose className="w-full h-full">
+                          <DialogClose onClick={() => {handleDelete(), setIsOpen(false)}} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-red-500 w-full hover:bg-red-700 h-10 px-4 py-2 text-slate-50">
                             Confirm
-                            </DialogClose>
-                        </Button>
+                          </DialogClose>
                         </DialogHeader>
                         </DialogContent>
                       </Dialog>
                     </div>
-                  : 
-                      <SheetClose className="w-full">
-                        <Button type="button" onClick={form.handleSubmit(onSubmitParams("Created"))} className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
-                      </SheetClose>
-                      
+                  : <Button type="button" onClick={form.handleSubmit(onSubmitParams("Created"))} className="bg-blue-500 hover:bg-blue-700 my-2 w-full">
+                      Create
+                    </Button>
                 }
               </form>
             </Form>
@@ -251,22 +238,3 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
   </main>
   )
 }
-
-const formSchema = z.object({
-  ape_nom: z.string()
-    .min(4, {message: "Fullname must be at least 4 characters." })
-    .max(36,  {message: "Fullname must be at most 36 characters",}),
-  id_paciente: z.coerce.number()
-    .min(1, {message: "ID patient must be at least 1 digit." })
-    .max(999999, {message: "ID patiente must be in the range 1 to 999999." })
-    .positive({message:"ID patient must be positive"}),
-  fecha: z.string()
-    .min(10, {message: "Date must be at least 10 characters."})
-    .max(30, {message: "Date must be in the range 30 characters."}),
-  hora: z.string()
-    .min(4, { message: "Timme must be at least 4 characters."})
-    .max(8 , { message: "Time must be in the range 4 to 8 characters." }),
-  id_agenda: z.coerce.number()
-    .min(1, { message: "ID Agenda must be at least 1 numbers." })
-    .max(999999, { message: "ID Agenda must be in the range 1 to 999999." })
-})

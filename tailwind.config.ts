@@ -34,12 +34,24 @@ const config = {
           "100%": {
             opacity: "1",
           },
-        }
+        },
+        spinLong: {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "2%": {
+            transform: "rotate(360deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.2s ease-out"
+        "fade-in": "fade-in 0.2s ease-out",
+        "spin-long": "spinLong 30s linear infinite"
       },
     },
   },

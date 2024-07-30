@@ -1,13 +1,12 @@
+import { ScheduleBody } from "@/components/schedule-body";
+import { ScheduleHeader } from "@/components/schedule-header";
 import { Cita } from "@/types/cita";
-import { Plan } from "./plan";
-import { PlanHeader } from "./plan-header";
 
-export const Schedule = ({dataMeet} : {dataMeet: Cita[]}) => {
-  //console.log(meet);
+export const Schedule = ({initialData} : {initialData: Cita[]}) => {
   return (
-    <div className="grid grid-cols-12 col-span-12 lg:col-span-8 xl:col-span-9 my-3 px-2 h-full overflow-auto animate-fade-in">
-      <PlanHeader />
-      <Plan meets={dataMeet}/>
+    <div className="grid grid-cols-12 col-span-12 mx-auto w-[90%] lg:w-full border shadow-sm shadow-black/50 p-4 lg:col-span-7 xl:col-span-8 my-3 px-5 h-full overflow-auto animate-fade-in duration-200">
+      <ScheduleHeader />
+      <ScheduleBody meets={initialData}/>
     </div>
   )
 }
