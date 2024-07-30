@@ -102,7 +102,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
     {hours.map((hour, index) => (
       <Sheet key={index} >
         <SheetTrigger className="col-span-12">
-          <div className="col-span-12 flex flex-nowrap h-12 gap-0 hover:bg-blue-100 mx-1 duration-150">
+          <div className="col-span-12 flex flex-nowrap h-12 gap-0 hover:bg-blue-100 dark:hover:text-neutral-700 dark:hover:bg-blue-200 mx-1 duration-150">
             <div className="w-14 h-12 flex justify-center items-center text-sm border-b border-r border-gray-300">
               {hour}
             </div>
@@ -111,7 +111,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
               ? agenda.map((item, index) =>
                 item.hora === hour && item.fecha === day
                   ? item.id_agenda !== -1
-                      ? <div key={index} onClick={() => handleDate(item)} className="h-12 text-start text-sm md:text-base bg-blue-200 w-full z-10 flex items-center px-2 hover:bg-blue-600 text-black/70 hover:text-white duration-150 animate-fade-in">Patient: {item.ape_nom}</div>
+                      ? <div key={index} onClick={() => handleDate(item)} className="h-12 text-start text-sm md:text-base bg-blue-200 w-full z-10 flex items-center px-2 hover:bg-blue-600 text-black/70 hover:text-white duration-150 animate-fade-in dark:bg-blue-400 dark:hover:bg-blue-600">Patient: {item.ape_nom}</div>
                       : <div key={index} onClick={() => handleNewDate(hour)} className="h-12 py-0"></div>
                   : null
                 )
@@ -124,13 +124,14 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
           <SheetClose id="close-sheet" className="absolute top-0 right-0 m-2"/>
           <SheetHeader>
             <SheetTitle className="text-center text-2xl">{editAppointment?.id_agenda === -1 || editAppointment?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
-            <SheetDescription className="text-start px-4">
-              Fill the fields to complete the Appointment
+            <SheetDescription className="text-center px-4">
+              Fill the fields to complete the appointment
             </SheetDescription>
             <Form {...form}>
-              <FormDescription className="w-full flex flex-col text-center text-xl font-semibold">
-                <span>{editAppointment?.fecha.substring(0,10)}</span>
-                <span className="text-lg">{editAppointment?.hora}</span>
+              <FormDescription className="w-full flex justify-center items-center gap-2 text-center text-xl font-semibold">
+                <span>{editAppointment?.fecha.substring(0,10).replaceAll("-","/")}</span>
+                <span>-</span>
+                <span>{editAppointment?.hora}</span>
               </FormDescription>
               <form className="flex flex-col gap-4 px-4">
                 <FormField control={form.control} name="fecha" render={({ field }) => {
@@ -194,7 +195,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                 }}>
                 </FormField>
                 {editAppointment?.id_agenda !== -1 && editAppointment?.id_agenda !== null
-                  ? <SheetFooter className="!flex !flex-col my-2 gap-2">
+                  ? <div className="!flex !flex-col my-2 gap-2">
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button type="button" className="bg-blue-500 hover:bg-blue-700 text-white">Update</Button>
@@ -227,7 +228,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                         </DialogHeader>
                         </DialogContent>
                       </Dialog>
-                    </SheetFooter>
+                    </div>
                   : <Button type="button" onClick={form.handleSubmit(onSubmitParams("Created"))} className="bg-blue-500 hover:bg-blue-700 my-2 w-full">
                       Create
                     </Button>

@@ -4,7 +4,7 @@
 		.shp0 { fill: #6997ff } 
 		.shp1 { fill: #577bcb } 
 		.shp2 { fill: #ffffff } 
-		.shp3 { fill: #3a3a3a } 
+		.shp3 { fill: #9a4dc7 } 
 	</style>
 	<g id="Layer" style="opacity: 0.302">
 		<path id="Layer" class="shp0" d="M0.08 16.8L2.87 3.19C3.32 1.03 5.43 -0.36 7.6 0.08L21.2 2.87C23.37 3.32 24.76 5.43 24.32 7.6L21.52 21.2C21.08 23.37 18.97 24.76 16.8 24.32L3.2 21.52C1.03 21.08 -0.36 18.97 0.08 16.8Z" />
