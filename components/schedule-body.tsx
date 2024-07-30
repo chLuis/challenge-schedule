@@ -4,18 +4,19 @@ import React from "react";
 import { useForm } from "react-hook-form"
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Toaster } from "@/components/ui/sonner"
 import { toast } from "sonner"
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { useDatesStore } from "@/stores/date/date.store";
 import { useDayStore } from "@/stores/day/day.store"
 import { hours } from "@/constants";
 import { Cita } from "@/types/cita";
 import { formSchema } from "@/schemas/form";
+import { getDate } from "date-fns";
 
 export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
   const day = useDayStore((state) => state.getDay())
@@ -51,7 +52,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
         ape_nom: editAppointment.ape_nom || "",
         hora: editAppointment.hora || "",
         fecha: editAppointment.fecha || "",
-        id_agenda: editAppointment.id_agenda || 0,
+        id_agenda: editAppointment.id_agenda || new Date().getTime(),
         id_paciente: editAppointment.id_paciente || 0,
       });
     }
@@ -122,15 +123,19 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
         <SheetContent side={"left"} className="" >
           <SheetClose id="close-sheet" className="absolute top-0 right-0 m-2"/>
           <SheetHeader>
-            <SheetTitle className="text-center text-2xl pb-2">{editAppointment?.id_agenda === -1 || editAppointment?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
+            <SheetTitle className="text-center text-2xl">{editAppointment?.id_agenda === -1 || editAppointment?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
             <SheetDescription className="text-start px-4">
               Fill the fields to complete the Appointment
             </SheetDescription>
             <Form {...form}>
-              <form className="space-y-4 px-4">
+              <FormDescription className="w-full flex flex-col text-center text-xl font-semibold">
+                <span>{editAppointment?.fecha.substring(0,10)}</span>
+                <span className="text-lg">{editAppointment?.hora}</span>
+              </FormDescription>
+              <form className="flex flex-col gap-4 px-4">
                 <FormField control={form.control} name="fecha" render={({ field }) => {
                   return (
-                    <FormItem>
+                    <FormItem className="hidden">
                       <FormLabel>Date</FormLabel>
                       <FormControl>
                         <Input {...field} value={editAppointment?.fecha} disabled/>
@@ -142,7 +147,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                 </FormField>
                 <FormField control={form.control} name="hora" render={({ field }) => {
                   return (
-                    <FormItem>
+                    <FormItem className="hidden">
                       <FormLabel>Time</FormLabel>
                       <FormControl>
                         <Input {...field} disabled />
@@ -166,7 +171,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                 </FormField>
                 <FormField control={form.control} name="id_agenda" render={({ field }) => {
                   return (
-                    <FormItem>
+                    <FormItem className="hidden">
                       <FormLabel>ID Appointment</FormLabel>
                       <FormControl>
                         <Input {...field} type="number"/>
@@ -189,7 +194,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                 }}>
                 </FormField>
                 {editAppointment?.id_agenda !== -1 && editAppointment?.id_agenda !== null
-                  ? <div className="flex flex-col my-2 gap-2">
+                  ? <SheetFooter className="!flex !flex-col my-2 gap-2">
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button type="button" className="bg-blue-500 hover:bg-blue-700 text-white">Update</Button>
@@ -222,7 +227,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                         </DialogHeader>
                         </DialogContent>
                       </Dialog>
-                    </div>
+                    </SheetFooter>
                   : <Button type="button" onClick={form.handleSubmit(onSubmitParams("Created"))} className="bg-blue-500 hover:bg-blue-700 my-2 w-full">
                       Create
                     </Button>

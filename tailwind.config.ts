@@ -36,10 +36,10 @@ const config = {
           },
         },
         spinLong: {
-          "0%": {
+          "10%": {
             transform: "rotate(0deg)",
           },
-          "2%": {
+          "12%": {
             transform: "rotate(360deg)",
           },
           "100%": {

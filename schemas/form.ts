@@ -16,5 +16,5 @@ export const formSchema = z.object({
     .max(8 , { message: "Time must be in the range 4 to 8 characters." }),
   id_agenda: z.coerce.number()
     .min(1, { message: "ID Agenda must be at least 1 numbers." })
-    .max(999999, { message: "ID Agenda must be in the range 1 to 999999." })
+    .max(99999999999999, { message: "ID Agenda must be in the range 1 to 99999999999999." })
 })
