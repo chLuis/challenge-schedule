@@ -23,7 +23,6 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
   const getAgenda = useDatesStore((state) => state.getDates)
   const changeAgenda = useDatesStore((state) => state.changeDate)
   const [ editAppointment, setEditAppointment ] = React.useState<Cita | undefined>(undefined)
-  const [ isOpen, setIsOpen ] = React.useState(false);
 
   React.useMemo(() => {
     const datos = getAgenda();
@@ -76,7 +75,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
 
   const handleSubmit = (values: z.infer<typeof formSchema>, secondParam: string) => {
     changeAgenda(editAppointment!, values)
-    setIsOpen(false)
+    document.getElementById("close-sheet")?.click()
     toast(`Appointment ${secondParam}`)
   };
 
@@ -85,7 +84,6 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
   }
 
   const handleDelete = () => {
-    toast("Appointment Deleted")
     const newDate = {
       id_agenda: -1,
       id_paciente: null,
@@ -94,13 +92,15 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
       ape_nom: null,
     }
     changeAgenda(editAppointment!, newDate)
+    toast("Appointment Deleted")
+    document.getElementById("close-sheet")?.click()
   }
 
   return (
     <main className="col-span-12 grid grid-cols-12 mt-2 mx-3 overflow-auto animate-fade-in">
     {hours.map((hour, index) => (
       <Sheet key={index} >
-        <SheetTrigger className="col-span-12" onClick={() => setIsOpen(!isOpen)}>
+        <SheetTrigger className="col-span-12">
           <div className="col-span-12 flex flex-nowrap h-12 gap-0 hover:bg-blue-100 mx-1 duration-150">
             <div className="w-14 h-12 flex justify-center items-center text-sm border-b border-r border-gray-300">
               {hour}
@@ -110,7 +110,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
               ? agenda.map((item, index) =>
                 item.hora === hour && item.fecha === day
                   ? item.id_agenda !== -1
-                      ? <div key={index} onClick={() => handleDate(item)} className="h-12 bg-blue-300 w-full z-10 flex items-center px-2 hover:bg-blue-600 text-black/70 hover:text-white duration-150 animate-fade-in">Patient: {item.ape_nom}</div>
+                      ? <div key={index} onClick={() => handleDate(item)} className="h-12 text-start text-sm md:text-base bg-blue-200 w-full z-10 flex items-center px-2 hover:bg-blue-600 text-black/70 hover:text-white duration-150 animate-fade-in">Patient: {item.ape_nom}</div>
                       : <div key={index} onClick={() => handleNewDate(hour)} className="h-12 py-0"></div>
                   : null
                 )
@@ -120,13 +120,12 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
           </div>
         </SheetTrigger>
         <SheetContent side={"left"} className="" >
-          <SheetClose className="absolute top-0 right-0 m-2"/>
+          <SheetClose id="close-sheet" className="absolute top-0 right-0 m-2"/>
           <SheetHeader>
             <SheetTitle className="text-center text-2xl pb-2">{editAppointment?.id_agenda === -1 || editAppointment?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
             <SheetDescription className="text-start px-4">
               Fill the fields to complete the Appointment
             </SheetDescription>
-            
             <Form {...form}>
               <form className="space-y-4 px-4">
                 <FormField control={form.control} name="fecha" render={({ field }) => {
@@ -217,7 +216,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                             <DialogDescription>
                               This action cannot be undone. This will permanently delete your appointment
                             </DialogDescription>
-                          <DialogClose onClick={() => {handleDelete(), setIsOpen(false)}} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-red-500 w-full hover:bg-red-700 h-10 px-4 py-2 text-slate-50">
+                          <DialogClose onClick={() => handleDelete()} className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 bg-red-500 w-full hover:bg-red-700 h-10 px-4 py-2 text-slate-50">
                             Confirm
                           </DialogClose>
                         </DialogHeader>
