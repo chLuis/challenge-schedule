@@ -4,9 +4,11 @@ import React from "react";
 import { useForm } from "react-hook-form"
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { X } from "lucide-react";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetOverlay, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
+//import { X } from "lucide-react";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetOverlay, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Toaster } from "@/components/ui/sonner"
+import { toast } from "sonner"
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
@@ -74,12 +76,19 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
     setEditDate(newItem)
   }
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = (values: z.infer<typeof formSchema>, secondParam: string) => {
     changeDate(editDate!, values)
     setIsOpen(false)
+    toast(`Appointment ${secondParam}`)
   };
 
+  const onSubmitParams = (secondParam: string) => {
+    return (values: z.infer<typeof formSchema>) => handleSubmit(values, secondParam);
+  }
+
+
   const handleDelete = () => {
+    toast("Appointment Deleted")
     const newDate = {
       id_agenda: -1,
       id_paciente: null,
@@ -88,9 +97,10 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
       ape_nom: null,
     }
     changeDate(editDate!, newDate)
-    setIsOpen(false)
 
     }
+
+
   return (
     <main className="col-span-12 grid grid-cols-12 mt-2 mx-3 overflow-auto animate-fade-in">
     {hours.map((hour, index) => (
@@ -115,10 +125,11 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
           </div>
         </SheetTrigger>
           {/* <SheetOverlay className="" onClick={() => setIsOpen(false)}/> */}
-        <SheetContent side={"left"} className="shadow-none">
+        <SheetContent side={"left"} className="" >
           {/* <div className="select-none flex justify-end items-center w-full ">
             <X onClick={() => setIsOpen(false)}  className="cursor-pointer p-1"/>
           </div> */}
+          <SheetClose className="absolute top-0 right-0 m-2"/>
           <SheetHeader>
             <SheetTitle className="text-center text-2xl pb-2">{editDate?.id_agenda === -1 || editDate?.id_agenda === null ? "Create Appointment" : "Edit Appointment"}</SheetTitle>
             <SheetDescription className="text-start px-4">
@@ -126,7 +137,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
             </SheetDescription>
             
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 px-4">
+              <form className="space-y-4 px-4">
                 <FormField control={form.control} name="fecha" render={({ field }) => {
                   return (
                     <FormItem>
@@ -199,7 +210,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                             <DialogDescription>
                               This action cannot be undone. This will updating your appointment, confirm?
                             </DialogDescription>
-                            <Button type="button" onClick={form.handleSubmit(handleSubmit)} className="bg-blue-500 hover:bg-blue-700 text-white p-0">
+                            <Button type="button" onClick={form.handleSubmit(onSubmitParams("Updating"))} className="bg-blue-500 hover:bg-blue-700 text-white p-0">
                               <DialogClose className="w-full h-full">Confirm</DialogClose>
                             </Button>
                         </DialogHeader>
@@ -215,12 +226,20 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
                             <DialogDescription>
                               This action cannot be undone. This will permanently delete your appointment
                             </DialogDescription>
-                        <Button onClick={() => handleDelete()} className="bg-red-500 hover:bg-red-700 text-white">Confirm</Button>
+                        <Button onClick={() => {handleDelete(), setIsOpen(false)}} className="bg-red-500 hover:bg-red-700 text-white p-0">
+                            <DialogClose className="w-full h-full">
+                            Confirm
+                            </DialogClose>
+                        </Button>
                         </DialogHeader>
                         </DialogContent>
                       </Dialog>
                     </div>
-                  : <Button type="button" onClick={form.handleSubmit(handleSubmit)} className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
+                  : 
+                      <SheetClose className="w-full">
+                        <Button type="button" onClick={form.handleSubmit(onSubmitParams("Created"))} className="bg-blue-500 hover:bg-blue-700 my-2 w-full">Create</Button>
+                      </SheetClose>
+                      
                 }
               </form>
             </Form>
@@ -228,6 +247,7 @@ export const Plan = ({meets} : {meets: Cita[]}) => {
         </SheetContent>
       </Sheet>
     ))}
+    <Toaster />
   </main>
   )
 }
