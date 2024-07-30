@@ -19,7 +19,7 @@ export const CalendarComponent = () => {
   },[])
 
   return (
-    <div className="col-span-12 dark:bg-neutral-700 lg:col-span-4 xl:col-span-3 flex flex-col gap-4 justify-center items-center overflow-auto h-fit min-h-fit p-3 lg:mb-0 duration-200">
+    <div className="col-span-12 dark:bg-neutral-800 lg:col-span-4 xl:col-span-3 flex flex-col gap-4 justify-center items-center overflow-auto h-fit min-h-fit p-3 lg:mb-0 duration-200">
       <Calendar
         mode="single"
         selected={date}

@@ -7,7 +7,7 @@ export default async function Home() {
   const data = await GET();
 
   return (
-    <main className="grid grid-cols-12 pb-4 lg:h-screen content-start overflow-clip dark:bg-neutral-700">
+    <main className="grid grid-cols-12 pb-4 lg:h-screen content-start overflow-clip dark:bg-neutral-800">
       <Header />
       <CalendarComponent />
       <Schedule initialData={data}/>

@@ -14,18 +14,18 @@ export const ScheduleHeader = () => {
   }, [day]);
 
   return (
-    <header className="relative flex gap-4 font-semibold items-center bg-white z-40 col-span-12 mx-6 pb-2 text-center dark:bg-neutral-700">
-      <span className=" absolute top-0 left-[0%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[10%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[20%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[30%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[40%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[50%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[60%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[70%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[80%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[90%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
-      <span className=" absolute top-0 left-[100%] w-4 h-4 rounded-full shadow-inner shadow-black/50"></span>
+    <header className="relative flex gap-4 font-semibold items-center bg-white z-40 col-span-12 mx-6 pb-2 text-center dark:bg-neutral-600">
+      <span className=" absolute top-0 left-[0%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[10%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[20%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[30%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[40%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[50%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[60%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[70%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[80%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[90%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
+      <span className=" absolute top-0 left-[100%] w-4 h-4 rounded-full shadow-inner shadow-black/50 dark:bg-neutral-800"></span>
       <div className="mt-8">
         <div className="uppercase text-xs w-10 text-blue-500">
           {nombreDias[dayNoFormat.getDay()].substring(0, 3)}
@@ -36,7 +36,7 @@ export const ScheduleHeader = () => {
             : day.substring(8, 10)}
         </div>
       </div>
-      <h2 className="text-black/80 dark:text-neutral-100 flex items-center justify-center h-full mt-8">
+      <h2 className="text-black/80 dark:text-neutral-100 flex items-center justify-center h-full mt-8 select-none">
         <PencilLineIcon className="stroke-1 me-2 min-w-6" /><span>Book Your Appointment</span></h2>
     </header>
   );
