@@ -1,7 +1,6 @@
 import { GET } from "@/actions/data";
-import { CalendarComponent } from "@/components/calendar";
+import { BodyCalendar } from "@/components/body-calendar";
 import { Header } from "@/components/header";
-import { Schedule } from "@/components/schedule";
 
 export default async function Home() {
   const data = await GET();
@@ -9,10 +8,7 @@ export default async function Home() {
   return (
     <main className="grid grid-cols-12 pb-4 w-full lg:h-screen content-start dark:bg-neutral-800">
       <Header />
-      <div className="col-span-12 w-[90%] overflow-auto grid grid-cols-12 mx-auto">
-        <CalendarComponent />
-        <Schedule initialData={data} />
-      </div>
+      <BodyCalendar data={data}/>
     </main>
   );
 }
