@@ -6,7 +6,8 @@ import { Cita } from "@/types/cita";
 
 interface StoreState {
   dates: Cita[];
-  //addDate: (date: Cita) => void;
+  addDate: (date: Cita) => void;
+  getDate: (date: Cita) => Cita | undefined;
   getDates: () => Cita[];
   changeDate: (date: Cita, newDate: Cita) => void;
   removeDate: (date: Cita) => void;
@@ -15,6 +16,8 @@ interface StoreState {
 
 const storeApi: StateCreator<StoreState> = (set, get) => ({
   dates: [],
+  addDate: (date) => set((state) => ({ dates: [...state.dates, date] })),
+  getDate: (date) => get().dates.find((i) => i.fecha === date.fecha && i.hora === date.hora),
   getDates: () => get().dates,
   changeDate: (date, newDate) => set((state) => {
     const exists = state.dates.some(i => i.fecha === date.fecha && i.hora === date.hora);

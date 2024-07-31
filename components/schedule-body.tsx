@@ -17,19 +17,55 @@ import { hours } from "@/constants";
 import { Cita } from "@/types/cita";
 import { formSchema } from "@/schemas/form";
 import { getDate } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+
+
+import { Calendar } from "@/components/ui/calendar";
+
+
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+
+
 
 export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
   const day = useDayStore((state) => state.getDay())
+  const newDay = useDayStore((state) => state.newDay);
   const agenda = useDatesStore((state) => state.dates)
+  const getAgendaSingle = useDatesStore((state) => state.getDate)
   const getAgenda = useDatesStore((state) => state.getDates)
+  const addAgenda = useDatesStore((state) => state.addDate)
   const changeAgenda = useDatesStore((state) => state.changeDate)
   const [ editAppointment, setEditAppointment ] = React.useState<Cita | undefined>(undefined)
+  const [ dayCalendar, setDayCalendar ] = React.useState<Date | undefined>(new Date(day))
+  const newDate = {
+    id_agenda: -1,
+    id_paciente: null,
+    fecha: editAppointment?.fecha ?? "",
+    hora: editAppointment?.hora ?? "",
+    ape_nom: null,
+  }
+
+
+  React.useMemo(() => {
+    newDay(dayCalendar || new Date());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dayCalendar]);
 
   React.useMemo(() => {
     const datos = getAgenda();
     if(datos.length === 0) {
       for (let i = 0; i < meets.length; i++) {
-        changeAgenda(meets[i], meets[i])
+        addAgenda(meets[i])
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,7 +76,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
     defaultValues: {
       ape_nom: editAppointment?.ape_nom ?? "",
       hora: editAppointment?.hora ?? "",
-      fecha: editAppointment?.fecha ?? "",
+      fecha: day,
       id_agenda: editAppointment?.id_agenda ?? 0,
       id_paciente: editAppointment?.id_paciente ?? 0,
     },
@@ -51,13 +87,13 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
       form.reset({
         ape_nom: editAppointment.ape_nom || "",
         hora: editAppointment.hora || "",
-        fecha: editAppointment.fecha || "",
+        fecha: day || "",
         id_agenda: editAppointment.id_agenda || new Date().getTime(),
-        id_paciente: editAppointment.id_paciente || 0,
+        id_paciente: editAppointment.id_paciente || Math.floor(Math.random()*10000),
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editAppointment]);
+  }, [editAppointment, day]);
 
   function handleDate(item: Cita) {
     setEditAppointment(item)
@@ -74,10 +110,53 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
     setEditAppointment(newItem)
   }
 
-  const handleSubmit = (values: z.infer<typeof formSchema>, secondParam: string) => {
-    changeAgenda(editAppointment!, values)
+  function completeCreateEditDelete(toastNotification: string) {
+    toast(`Appointment ${toastNotification}!`)
     document.getElementById("close-sheet")?.click()
-    toast(`Appointment ${secondParam}`)
+  }
+
+  const handleSubmit = (values: z.infer<typeof formSchema>, secondParam: string) => {
+    const dateExist = getAgendaSingle(values)
+    if(secondParam === "Updating") {
+      if(dateExist) {
+        // Si estoy haciendo un update a un campo que esta ocupado por otra cita
+        if(dateExist.id_agenda !== -1) {
+          if(dateExist.id_agenda === values.id_agenda && dateExist.fecha === values.fecha && dateExist.hora === values.hora ) {
+            // Si estoy haciendo un update a un campo que esta ocupado por la misma cita
+            changeAgenda(values, values)
+            completeCreateEditDelete(secondParam)
+            return
+          }
+          return toast(`The appointment isn't free!`)
+        }
+        // Si estoy haciendo un update a un cammpo libre, con id = -1
+        changeAgenda(dateExist!, values)
+        changeAgenda(editAppointment!, newDate)
+        completeCreateEditDelete(secondParam)
+        return
+      } else {
+        // Si estoy haciendo un update a un campo totalmente libre
+        addAgenda(values)
+        changeAgenda(editAppointment!, newDate)
+        completeCreateEditDelete(secondParam)
+        return
+      }
+    } else {
+      if(!dateExist) {
+        // Creando en un campo totalmente libre
+        addAgenda(values)
+        completeCreateEditDelete(secondParam)
+        return
+      } else if(dateExist.id_agenda === -1) {
+        // Creando en un campo "creado" pero con id = -1
+        changeAgenda(values, values)
+        completeCreateEditDelete(secondParam)
+        return 
+      }
+      // Intentando crear en un campo ocupado
+      toast('Appointment cant be created!')
+      return 
+    }
   };
 
   const onSubmitParams = (secondParam: string) => {
@@ -85,17 +164,14 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
   }
 
   const handleDelete = () => {
-    const newDate = {
-      id_agenda: -1,
-      id_paciente: null,
-      fecha: day,
-      hora: editAppointment!.hora,
-      ape_nom: null,
-    }
     changeAgenda(editAppointment!, newDate)
-    toast("Appointment Deleted")
-    document.getElementById("close-sheet")?.click()
+    completeCreateEditDelete("Deleted")
   }
+
+
+  const handleSelectDay = (day: Date | undefined) => {
+    day ? newDay(day) : newDay(new Date());
+  };
 
   return (
     <main className="col-span-12 grid grid-cols-12 mt-2 mx-3 overflow-auto animate-fade-in">
@@ -128,18 +204,38 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
               Fill the fields to complete the appointment
             </SheetDescription>
             <Form {...form}>
-              <FormDescription className="w-full flex justify-center items-center gap-2 text-center text-xl font-semibold">
-                <span>{editAppointment?.fecha.substring(0,10).replaceAll("-","/")}</span>
-                <span>-</span>
-                <span>{editAppointment?.hora}</span>
-              </FormDescription>
-              <form className="flex flex-col gap-4 px-4">
+              <form className="flex flex-col gap-4 px-4 pt-4">
                 <FormField control={form.control} name="fecha" render={({ field }) => {
                   return (
-                    <FormItem className="hidden">
+                    <FormItem className="">
                       <FormLabel>Date</FormLabel>
                       <FormControl>
-                        <Input {...field} value={editAppointment?.fecha} disabled/>
+                        <Popover>
+                          <Input {...field} value={day} className="hidden" disabled/>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !day && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {day ? format(day, "PPP") : <span>Pick a date</span>}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              className="rounded-md border select-none h-[350px] dark:bg-neutral-600"
+                              selected={new Date(day)}
+                              onSelect={handleSelectDay}
+                              defaultMonth={new Date(day)}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        {/* <Input {...field} value={editAppointment?.fecha} disabled/> */}
                       </FormControl>
                       <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
@@ -148,10 +244,23 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                 </FormField>
                 <FormField control={form.control} name="hora" render={({ field }) => {
                   return (
-                    <FormItem className="hidden">
+                    <FormItem >
                       <FormLabel>Time</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled />
+                        <Select value={field.value} onValueChange={field.onChange}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a time" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {hours.map((hora: string, index) => (
+                              agenda.some((item) => item.hora === hora && item.fecha === day && item.id_agenda !== -1)
+                                ? <SelectItem key={index} value={hora} disabled>{hora}</SelectItem>
+                                : <SelectItem key={index} value={hora}>{hora}</SelectItem>
+                              )
+                            )}
+                          </SelectContent>
+                        </Select>
+                        {/* <Input {...field} disabled /> */}
                       </FormControl>
                       <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
@@ -184,7 +293,7 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                 </FormField>
                 <FormField control={form.control} name="id_paciente" render={({ field }) => {
                   return (
-                    <FormItem>
+                    <FormItem className="hidden">
                       <FormLabel>ID Patient</FormLabel>
                       <FormControl>
                         <Input {...field} type="number"/>

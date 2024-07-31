@@ -3,7 +3,9 @@ import { z } from "zod";
 export const formSchema = z.object({
   ape_nom: z.string()
     .min(4, {message: "Fullname must be at least 4 characters." })
-    .max(36,  {message: "Fullname must be at most 36 characters",}),
+    .max(36,  {message: "Fullname must be at most 36 characters",})
+    //.regex(/^[a-zA-Z]+$/, {message: "Numbers are not allowed."}),
+    .trim(),
   id_paciente: z.coerce.number()
     .min(1, {message: "ID patient must be at least 1 digit." })
     .max(999999, {message: "ID patiente must be in the range 1 to 999999." })

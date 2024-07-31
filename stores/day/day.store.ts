@@ -21,7 +21,7 @@ const formatDateToArgentina = (date: Date): string => {
 const storeApi: StateCreator<StoreState> = (set, get) => ({
   day: "2021-09-16T00:00:00",
   getDay: () => get().day,
-  newDay: (newDate: Date ) => set(() => ({ day: formatDateToArgentina(newDate) })),
+  newDay: (newDate: Date = new Date()) => set(() => ({ day: formatDateToArgentina(newDate) })),
   removeDay: () => set((state) => ({ day: "" }))
 });
 
