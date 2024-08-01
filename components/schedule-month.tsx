@@ -36,6 +36,8 @@ export const ScheduleMonth: React.FC<ScheduleMonthProps> = ({ goToDay }) => {
   const start = startOfWeek(startOfMonth(newDate), { weekStartsOn: 0 });
   const end = endOfWeek(endOfMonth(newDate), { weekStartsOn: 0 });
   const entireMonth = eachDayOfInterval({ start, end });
+  //const monthFormat = format(day, "MM");
+  //const isCurrentMonth = monthFormat === month;
 
 
   return (
@@ -55,14 +57,19 @@ export const ScheduleMonth: React.FC<ScheduleMonthProps> = ({ goToDay }) => {
             const monthFormat = format(day, "MM");
             const yearFormat = format(day, "yyyy");
             const dayEntire = `${yearFormat}-${monthFormat}-${dayFormat}`;
+            const isCurrentMonth = monthFormat === month;
             return (
-              <div key={index} className=" text-center border border-gray-400 duration-200 group">
+              <div key={index}  className={`text-center border border-gray-400 duration-200 group ${
+                isCurrentMonth
+                  ? "bg-white dark:bg-neutral-600"
+                  : "bg-neutral-200 dark:bg-neutral-700"
+              }`}>
                 <div onClick={() => newDay(new Date(`${dayEntire}T00:00:00`))}>
                   <div className="border text-sm font-bold border-t-0 border-l-0 border-r-0 dark:bg-blue-800 group-hover:bg-blue-300 dark:group-hover:bg-blue-600 duration-200">
                     {dayFormat.startsWith("0") ? dayFormat.replace("0", "") : dayFormat}
                   </div>
                   {agenda.some((agendaItem) => agendaItem.fecha.startsWith(dayEntire) && agendaItem.id_agenda !== -1 ) 
-                    ? (<div onClick={handleClick} className="flex justify-start overflow-y-auto items-start min-h-12 h-14 lg:h-20 dark:bg-neutral-500 text-ellipsis group-hover:bg-blue-300 dark:group-hover:bg-neutral-100 cursor-pointer duration-200">
+                    ? (<div onClick={handleClick} className="flex justify-start overflow-y-auto items-start min-h-12 h-14 lg:h-20  text-ellipsis group-hover:bg-blue-300 dark:group-hover:bg-neutral-100 cursor-pointer duration-200">
                         <div className="flex w-full flex-col dark:group-hover:text-black">
                           {agenda.map((item, index) => item.fecha.startsWith(dayEntire) && item.id_agenda !== -1 
                           ? <div key={index} className="line-clamp-1 text-[10px] md:text-xs text-start ps-1 border-b">{item.ape_nom}</div> 
@@ -70,7 +77,7 @@ export const ScheduleMonth: React.FC<ScheduleMonthProps> = ({ goToDay }) => {
                           )}
                         </div>
                     </div>) 
-                    : (<div onClick={handleClick} className="flex justify-center items-center min-h-12 h-14 lg:h-20 dark:bg-neutral-500 overflow-hidden text-ellipsis group-hover:bg-blue-300 dark:group-hover:bg-neutral-400 cursor-pointer duration-200">
+                    : (<div onClick={handleClick} className="flex justify-center items-center min-h-12 h-14 lg:h-20  overflow-hidden text-ellipsis group-hover:bg-blue-300 dark:group-hover:bg-neutral-400 cursor-pointer duration-200">
                       </div>
                     )}
                 </div>
