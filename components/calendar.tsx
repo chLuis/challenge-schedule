@@ -62,6 +62,7 @@ export const CalendarComponent = () => {
         width={400}
         height={400}
         alt="calendar"
+        priority={true}
         className="object-contain max-w-72 hidden lg:flex opacity-40 dark:opacity-70"
       />
     </div>

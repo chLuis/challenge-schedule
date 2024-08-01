@@ -42,26 +42,3 @@ export const useDatesStore = create<StoreState>()(
       storage: createJSONStorage(() => localStorage),
     })
 );
-
-  // addDate: (date: Cita) => set((state) => {
-  //   const existingDate = state.dates.find(item => 
-  //     item.fecha === date.fecha && 
-  //     item.hora === date.hora && 
-  //     item.id_paciente === date.id_paciente &&
-  //     item.id_agenda === date.id_agenda);
-  //   if (existingDate) {
-  //     return state;
-  //   } else {
-  //     const dateToUpdate = state.dates.find(item => 
-  //       item.fecha === date.fecha &&
-  //       item.hora === date.hora)
-  //       //console.log("To update ->",dateToUpdate);
-  //     if (dateToUpdate) {
-  //       dateToUpdate.ape_nom = date.ape_nom;
-  //       dateToUpdate.id_paciente = date.id_paciente;
-  //       dateToUpdate.id_agenda = date.id_agenda;
-  //       return { dates: [...state.dates] };
-  //     }
-  //     return { dates: [...state.dates, date] };
-  //   }
-  // }),

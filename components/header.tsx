@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ModeToggle } from "./mode-toogle";
 import { useDayStore } from "@/stores/day/day.store";
 
-
 export const Header = () => {
   const newDay = useDayStore((state) => state.newDay);
   return (

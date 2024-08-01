@@ -235,7 +235,6 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                             />
                           </PopoverContent>
                         </Popover>
-                        {/* <Input {...field} value={editAppointment?.fecha} disabled/> */}
                       </FormControl>
                       <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
@@ -260,7 +259,6 @@ export const ScheduleBody = ({meets} : {meets: Cita[]}) => {
                             )}
                           </SelectContent>
                         </Select>
-                        {/* <Input {...field} disabled /> */}
                       </FormControl>
                       <FormMessage className="text-xs animate-fade-in" />
                     </FormItem>
