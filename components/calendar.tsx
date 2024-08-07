@@ -1,30 +1,31 @@
 "use client";
 
 import React from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { useDayStore } from "@/stores/day/day.store";
 import Image from "next/image";
-import { Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { useDayStore } from "@/stores/day/day.store";
 
 export const CalendarComponent = () => {
   const newDay = useDayStore((state) => state.newDay);
   const getDay = useDayStore((state) => state.getDay());
-  const [date, setDate] = React.useState<Date | undefined>(
-    new Date("2021-09-16T00:00:00")
-  );
+  // const [date, setDate] = React.useState<Date | undefined>(
+  //   new Date("2021-09-16T00:00:00")
+  // );
 
-  React.useMemo(() => {
-    newDay(date || new Date());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date]);
+  // React.useMemo(() => {
+  //   newDay(date || new Date());
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [date]);
+  //console.log("111");
 
-  React.useEffect(() => {
-    setDate(new Date("2021-09-16T00:00:00"));
-  }, []);
+  // React.useEffect(() => {
+  //   setDate(new Date("2021-09-16T00:00:00"));
+  // }, []);
 
   const handleSelectDay = (day: Date | undefined) => {
     day ? newDay(day) : newDay(new Date());
@@ -38,7 +39,7 @@ export const CalendarComponent = () => {
             variant={"outline"}
             className={cn(
               "w-full lg:w-72 justify-start text-left font-normal dark:bg-neutral-600",
-              !date && "text-muted-foreground"
+              !getDay && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />

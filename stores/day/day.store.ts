@@ -25,11 +25,13 @@ const storeApi: StateCreator<StoreState> = (set, get) => ({
   removeDay: () => set((state) => ({ day: "" }))
 });
 
-export const useDayStore = create<StoreState>()(
-  persist(
-    storeApi,
-    {
-      name: 'day',
-      storage: createJSONStorage(() => localStorage),
-    })
-);
+
+export const useDayStore = create<StoreState>(storeApi);
+// export const useDayStore = create<StoreState>()(
+//   persist(
+//     storeApi,
+//     {
+//       name: 'day',
+//       storage: createJSONStorage(() => localStorage),
+//     })
+// );
