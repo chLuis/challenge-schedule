@@ -3,7 +3,7 @@ import Image from "next/image"
 import AddEmpanada from "./add-empanada"
 import ListEmpanada from "./list-empanada"
 import { GetAllEmpanadas } from "@/actions/empanada"
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner"
 import { ModeToggle } from "@/components/mode-toogle";
 
 export default async function RutaEmpanada() {

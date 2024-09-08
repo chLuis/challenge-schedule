@@ -31,3 +31,24 @@ export async function POST(request: any) {
     );
   }
 }
+
+// export async function DELETE(request: any) {
+//   //console.log(request, "REQUEST")
+//   return NextResponse.json(request)
+//   try {
+//     const client = await clientPromise;
+//     const db = client.db('Ruta');
+//     const collection = db.collection('empanada');
+//     //const { id } = await request.json();
+//     const result = await collection.findOneAndDelete(request)
+//     if (!result) {
+//       return NextResponse.json({ error: 'Item not found' }, { status: 404 });
+//     }
+//     return NextResponse.json({ deletedCount: result.deletedCount });
+//   } catch (e) {
+//     return NextResponse.json(
+//       { error: 'Failed to delete data' },
+//       { status: 500 },
+//     );
+//   }
+// }

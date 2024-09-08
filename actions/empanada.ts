@@ -20,3 +20,12 @@ export const PostEmpanada = async (item : any) => {
     console.log(err);
   }
 }
+
+export const DeleteEmpanada = async (item : any) => {
+  try {
+    const { data } = await axios.delete(`${url}/api/empanada/${item}`);
+    return data
+  } catch (err) {
+    console.log(err);
+  }
+}

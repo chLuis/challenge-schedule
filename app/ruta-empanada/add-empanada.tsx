@@ -55,7 +55,7 @@ export default function AddEmpanada() {
     
     <Sheet>
     <SheetTrigger className="fixed bottom-4 right-4">
-        <LucidePlus className="border text-white dark:text-white rounded-full p-1 stroke-2 text-xl w-8 h-8 bg-green-600" />
+        <LucidePlus className="border text-white dark:text-white rounded-full p-2 stroke-2 w-10 h-10 bg-green-600" />
     </SheetTrigger>
     <SheetContent className="overflow-y-auto">
       <SheetHeader>
