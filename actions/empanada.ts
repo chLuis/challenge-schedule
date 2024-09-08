@@ -1,6 +1,6 @@
 import axios from "axios";
-//const url = "https://challenge-schedule.vercel.app"
-const url = "http://localhost:3000"
+const url = "https://challenge-schedule.vercel.app"
+//const url = "http://localhost:3000"
 
 export const GetAllEmpanadas = async () => {
   console.log("EMPA GET");
