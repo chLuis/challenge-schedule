@@ -24,6 +24,7 @@ export const formSchema = z.object({
 export const empanadaSchema = z.object({
   Nombre: z.string().min(4, {message: "Es necesario el nombre"}),
   Domicilio: z.string().min(4, {message: "Es necesario el domicilio"}),
+  Descripcion: z.string().min(4, {message: "Es necesario la descripcion"}),
   Precio: z.coerce.number().min(100, {message: "Incluir precio"}),
   Estrellas: z.coerce.number()
     .min(1, {message: "Entre 1 y 5" })
