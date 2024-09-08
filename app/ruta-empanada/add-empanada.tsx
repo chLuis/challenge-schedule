@@ -21,6 +21,7 @@ import { PostEmpanada } from "@/actions/empanada";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner"
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
 
 export default function AddEmpanada() {
 
@@ -161,6 +162,14 @@ export default function AddEmpanada() {
               
                 <Button type="submit" onClick={(e) => e.stopPropagation()} className="bg-blue-500 hover:bg-blue-700 my-2 w-full">
                   Crear
+                </Button>
+                <Button type="button" className="bg-blue-500 hover:bg-blue-700 my-2 w-full">
+                <Link
+              href="/api/revalidate"
+              target="_blank"
+              rel="noopener noreferrer">
+                Actualizar datos
+                </Link> 
                 </Button>
               
             </form>
