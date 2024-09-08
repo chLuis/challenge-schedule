@@ -20,6 +20,7 @@ import { empanadaSchema } from "@/schemas/form";
 import { PostEmpanada } from "@/actions/empanada";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner"
+import { revalidatePath } from "next/cache";
 
 export default function AddEmpanada() {
 
@@ -40,6 +41,7 @@ export default function AddEmpanada() {
     console.log(values);
     try {
       const res = await PostEmpanada(values)
+      revalidatePath('/ruta-empanada')
       toast.success("Empanada agregada")
       //console.log(res);
       document.getElementById("close-sheet")?.click()
