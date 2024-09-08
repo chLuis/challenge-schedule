@@ -10,17 +10,19 @@ interface Empanada {
 
 export default function ListEmpanada({data} : {data: Empanada[]}) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center gap-2">
       {data?.map((empanada) => (
-        <div key={empanada._id} className="border p-4 min-w-48">
-          <h2>{empanada.Nombre}</h2>
-          {Array.from({ length: empanada.Estrellas }).map((_, index) => (
-            <span key={index}>&#9733;</span>
+        <div key={empanada._id} className="border rounded-md pb-4 px-4 min-w-60 w-60 max-w-60 bg-black/50">
+          <div className="flex justify-end">
+            {Array.from({ length: empanada.Estrellas }).map((_, index) => (
+            <span key={index} className="text-yellow-300 text-end">&#9733;</span>
           ))}
-          <p>{empanada.Domicilio}</p>
-          <p>$ {empanada.Precio}</p>
+          </div>
+          <h2 className="font-bold text-xl text-center">{empanada.Nombre}</h2>
+          <p className="text-xs text-center pb-3">{empanada.Domicilio}</p>
           <p>{empanada.Descripcion}</p>
-          <p className="text-xs italic">{empanada.Autor}</p>
+          <p className="pt-3">$ {empanada.Precio}</p>
+          <p className="text-xs italic pt-4 text-end">{empanada.Autor}</p>
         </div>
       ))}
     </div>
