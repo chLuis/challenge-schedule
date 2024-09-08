@@ -1,3 +1,4 @@
+
 interface Empanada {
   _id: string;
   Nombre: string;
@@ -10,9 +11,9 @@ interface Empanada {
 
 export default function ListEmpanada({data} : {data: Empanada[]}) {
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 text-neutral-900 dark:text-neutral-100">
       {data?.map((empanada) => (
-        <div key={empanada._id} className="border rounded-md pb-4 px-4 min-w-60 w-60 max-w-60 bg-black/50">
+        <div key={empanada._id} className="border border-black/50 dark:border-white/50 rounded-md pb-4 px-4 min-w-60 w-60 max-w-60 bg-white/80 dark:bg-black/50">
           <div className="flex justify-end">
             {Array.from({ length: empanada.Estrellas }).map((_, index) => (
             <span key={index} className="text-yellow-300 text-end">&#9733;</span>
