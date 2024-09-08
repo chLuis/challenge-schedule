@@ -20,3 +20,13 @@ export const formSchema = z.object({
     .min(1, { message: "ID Agenda must be at least 1 numbers." })
     .max(99999999999999, { message: "ID Agenda must be in the range 1 to 99999999999999." })
 })
+
+export const empanadaSchema = z.object({
+  Nombre: z.string().min(4, {message: "Es necesario el nombre"}),
+  Domicilio: z.string().min(4, {message: "Es necesario el domicilio"}),
+  Precio: z.coerce.number().min(100, {message: "Incluir precio"}),
+  Estrellas: z.coerce.number()
+    .min(1, {message: "Entre 1 y 5" })
+    .max(5, {message: "Entre 1 y 5" }),
+  Autor: z.string().min(2, {message: "Es necesario el autor"})
+})

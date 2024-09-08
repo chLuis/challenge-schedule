@@ -16,7 +16,7 @@ import { useDayStore } from "@/stores/day/day.store"
 import { hours } from "@/constants";
 import { Cita } from "@/types/cita";
 import { formSchema } from "@/schemas/form";
-import { getDate } from "date-fns";
+//import { getDate } from "date-fns";
 import {
   Select,
   SelectContent,
