@@ -42,9 +42,7 @@ export default function AddEmpanada() {
     console.log(values);
     try {
       const res = await PostEmpanada(values)
-      revalidatePath('/ruta-empanada')
       toast.success("Empanada agregada")
-      //console.log(res);
       document.getElementById("close-sheet")?.click()
       form.reset();
     } catch (error) {
