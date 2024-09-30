@@ -5,12 +5,15 @@ import ListEmpanada from "./list-empanada"
 import { GetAllEmpanadas } from "@/actions/empanada"
 import { Toaster } from "@/components/ui/sonner"
 import { ModeToggle } from "@/components/mode-toogle";
+import Login from "./login"
 
 export default async function RutaEmpanada() {
   const data = await GetAllEmpanadas();
   //console.log(data, "data")
   return (
     <div className="mx-auto w-full py-4 relative text-neutral-900 dark:text-neutral-100">
+        <Login />
+
       <Image src="/images/empanadas.webp" width={800} height={1200} priority alt="logoEmpa" className="h-screen w-screen fixed -z-20 object-contain" />
       <div className="inset-0 w-full h-screen fixed bg-white/70 dark:bg-black/70 -z-10"></div>
       <header className="px-6 text-center font-semibold py-2">

@@ -6,12 +6,7 @@ const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
-//
-/*
-MONGO_URI = mongodb+srv://chrestialuis:ceNdbkQJM6OS5tcg@cluster0.rx0sb3t.mongodb.net/
 
-
-*/
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
